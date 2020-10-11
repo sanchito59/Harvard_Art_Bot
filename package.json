@@ -1,0 +1,19 @@
+{
+  "name": "harvard_negative_bot",
+  "version": "1.0.0",
+  "description": "Twitter Bot sharing negatives from the Harvard Gallery",
+  "main": "negative.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "twitter",
+    "bot",
+    "node"
+  ],
+  "author": "Chris Sanchez, @sanchito59",
+  "license": "ISC",
+  "dependencies": {
+    "node-twitterbot": "^0.2.2"
+  }
+}
