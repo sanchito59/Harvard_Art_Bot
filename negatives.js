@@ -33,7 +33,7 @@ axios.get('https://api.harvardartmuseums.org/object', {
     hasimage: 1,
     apikey: 'ec639644-84b3-4fc5-8396-aff967cbee6f',
     keyword: 'photo',
-    page: Math.floor(Math.random() * 400)
+    page: Math.floor(Math.random() * 400) // TODO: Return pageCount
   }
 })
   .then((response) => {
