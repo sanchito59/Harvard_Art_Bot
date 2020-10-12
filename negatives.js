@@ -2,13 +2,16 @@ const Twitter = require('twitter');
 const axios = require('axios');
 const fs = require('fs');
 const request = require('request');
-
 const config = {
+
   consumer_key: process.env.NEGATIVES_CONSUMER_KEY,
   consumer_secret: process.env.NEGATIVES_CONSUMER_SECRET,
   access_token: process.env.NEGATIVES_ACCESS_TOKEN,
   access_token_secret: process.env.NEGATIVES_ACCESS_TOKEN_SECRET
+
 };
+
+console.log('WILL I APPEAR?')
 
 const NegativeBot = new Twitter(config);
 let caption; // TODO
@@ -21,7 +24,7 @@ const pageCount = async () => {
       keyword: 'photo'
     }
   }).then((response) => {
-    console.log('test: ', response.data.info.pages)
+    console.log('page count: ', response.data.info.pages)
     return response.data.info.pages;
   }).catch((error) => {
     console.log(error)
