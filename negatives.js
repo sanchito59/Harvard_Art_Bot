@@ -41,7 +41,7 @@ const getAndTweetRandomImage = async () => {
       caption = `${title} - (${dated}) ${artist} | ${technique} | ${objectNum}`;
       if (photo === null) { // TODO
         console.log('photo url was null');
-        pageCount()
+        getAndTweetRandomImage()
       }
       return new Promise((resolve, reject) => {
         download(photo, 'image.png', () => resolve(caption));
