@@ -10,55 +10,50 @@ const config = {
   access_token_secret: process.env.NEGATIVES_ACCESS_TOKEN_SECRET
 };
 
-console.log('WILL I APPEAR?')
-
 const NegativeBot = new Twitter(config);
 let caption; // TODO
 
-const pageCount = async () => {
+const getAndTweetRandomImage = async () => {
   axios.get('https://api.harvardartmuseums.org/object', {
     params: {
       hasimage: 1,
-      apikey: 'ec639644-84b3-4fc5-8396-aff967cbee6f',
+      apikey: process.env.HARVARD_API_KEY,
       keyword: 'photo'
     }
   }).then((response) => {
-    console.log('page count: ', response.data.info.pages)
     return response.data.info.pages;
-  }).catch((error) => {
-    console.log(error)
-  });
-};
-
-const makeCall = () => {
-  axios.get('https://api.harvardartmuseums.org/object', {
-    params: {
-      hasimage: 1,
-      apikey: 'ec639644-84b3-4fc5-8396-aff967cbee6f',
-      keyword: 'photo',
-      page: Math.floor(Math.random() * 400) // TODO: Return pageCount
-    }
-  })
-    .then((response) => {
-      let randomItemOnPage = Math.floor(Math.random() * 10);
-      let item = response.data.records[randomItemOnPage];
-      let photo = item.primaryimageurl;
-      let artist = item.people ? item.people[0].displayname : '';
-      let technique = item.technique || '';
-      let dated = item.dated || '';
-      let title = item.title || '';
-      caption = `${title} - (${dated}) ${artist} | ${technique}`;
+  }).then((pageCount) => {
+    axios.get('https://api.harvardartmuseums.org/object', {
+      params: {
+        hasimage: 1,
+        apikey: process.env.HARVARD_API_KEY,
+        keyword: 'photo',
+        page: Math.floor(Math.random() * pageCount),
+      }
+    }).then((response) => {
+      const item = response.data.records[Math.floor(Math.random() * 10)]; // 10 records per page
+      const objectNum = item.objectnumber;
+      const photo = item.primaryimageurl;
+      const artist = item.people ? item.people[0].displayname : '';
+      const technique = item.technique || '';
+      const dated = item.dated || '';
+      const title = item.title || '';
+      caption = `${title} - (${dated}) ${artist} | ${technique} | ${objectNum}`;
+      if (photo === null) { // TODO
+        console.log('photo url was null');
+        pageCount()
+      }
       return new Promise((resolve, reject) => {
-        download(photo, 'file.png', () => resolve(caption))
+        download(photo, 'image.png', () => resolve(caption));
       })
     }).then(() => {
-      let data = fs.readFileSync(`${__dirname}/file.png`);
+      let data = fs.readFileSync(`${__dirname}/image.png`);
       return NegativeBot.post('media/upload', { media: data });
     }).then(media => {
       console.log('media uploaded');
       const status = {
-        status: caption,
-        media_ids: media.media_id_string // Need a unique mediaID
+        status: caption.substring(0, 280), // Max character for a Tweet is 280
+        media_ids: media.media_id_string // Need a unique mediaID from the upload
       }
       return NegativeBot.post('statuses/update', status)
     }).then(tweet => {
@@ -66,12 +61,13 @@ const makeCall = () => {
     }).catch((error) => {
       console.log(error);
     });
-
-  const download = (uri, filename, callback) => {
-    request.head(uri, (err, res, body) => {
-      request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-    });
-  };
+  });
 }
 
-makeCall()
+const download = (uri, filename, callback) => {
+  request.head(uri, (err, res, body) => {
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  });
+};
+
+getAndTweetRandomImage()
