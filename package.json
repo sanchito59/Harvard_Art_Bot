@@ -1,7 +1,7 @@
 {
   "name": "harvard_negative_bot",
   "version": "1.0.0",
-  "description": "Twitter Bot sharing negatives from the Harvard Gallery",
+  "description": "Twitter Bot sharing images from the Harvard Art Museum archives.",
   "main": "negative.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
