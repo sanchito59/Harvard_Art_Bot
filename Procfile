@@ -1,1 +1,1 @@
-worker: node negatives.js
+worker: node bot.js
