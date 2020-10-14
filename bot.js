@@ -22,7 +22,7 @@ const getPageCount = () => {
   });
 };
 
-const getImage = (pageCount) => {
+const getArchiveObject = (pageCount) => {
   return axios.get('https://api.harvardartmuseums.org/object', {
     params: {
       hasimage: 1,
@@ -36,7 +36,7 @@ const getAndTweetRandomImage = async () => {
   getPageCount().then((response) => {
     return response.data.info.pages;
   }).then((pageCount) => {
-    getImage(pageCount).then((response) => {
+    getArchiveObject(pageCount).then((response) => {
       const item = response.data.records[Math.floor(Math.random() * 10)]; // 10 records per page
       const objectNum = item.objectnumber;
       const photo = item.primaryimageurl;
@@ -59,7 +59,7 @@ const getAndTweetRandomImage = async () => {
       console.log('media uploaded');
       const status = {
         status: caption.substring(0, 280), // Max character for a Tweet is 280
-        media_ids: media.media_id_string // Need a unique mediaID from the upload
+        media_ids: media.media_id_string // Need to upload to get the unique media_id
       }
       return NegativeBot.post('statuses/update', status)
     }).then(tweet => {
