@@ -42,9 +42,11 @@ const getAndTweetRandomImage = async () => {
       const photo = item.primaryimageurl;
       const artist = item.people ? item.people[0].displayname : '';
       const technique = item.technique || '';
-      const dated = item.dated || '';
+      const dated = `(${item.dated})` || '';
       const title = item.title || '';
-      caption = `${title} - (${dated}) ${artist} | ${technique} | ${objectNum}`;
+
+      caption = `${title} - ${dated} ${artist} | ${technique} | ${objectNum}`;
+
       if (photo === null) { // TODO
         console.log('photo url was null');
         getAndTweetRandomImage()
