@@ -41,8 +41,8 @@ const getAndTweetRandomImage = async () => {
       const objectNum = item.objectnumber;
       const photo = item.primaryimageurl;
       const artist = item.people ? item.people[0].displayname : '';
-      const technique = `${item.technique} |` || '';
-      const dated = `(${item.dated})` || '';
+      const technique = item.technique ? `${item.technique} |` : '';
+      const dated = item.dated ? `(${item.dated})` : '';
       const title = item.title || '';
 
       caption = `${title} - ${dated} ${artist} | ${technique} ${objectNum}`;
