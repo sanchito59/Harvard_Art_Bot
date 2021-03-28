@@ -90,13 +90,13 @@ const getAndTweetRandomImage = async () => {
         console.log('Image is negative: ', isNegative);
       }
     }).then((negativeImage) => {
-      // Max characters for a Tweet is 280
       let status;
 
       if (isNegative) {
         status = {
+          // Max characters for a Tweet is 280
           status: caption.substring(0, 280),
-          media_ids: media_ids.concat(`,${negativeImage.media_id_string}`) // Concat second image media ID --> '21567,49295'
+          media_ids: `${negativeImage.media_id_string},${media_ids}` // Combine image media IDs --> '456,123' --> b/w,negative
         }
       } else {
         status = {
